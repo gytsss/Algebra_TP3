@@ -69,7 +69,7 @@ int main()
 	Face farFaceDown = { Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y, bottomLFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
 	Face farFaceRight = { Vector3{ rightFace.endPosition.x, rightFace.endPosition.y, rightFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
 	Face farFaceLeft = { Vector3{ leftFace.endPosition.x, leftFace.endPosition.y, leftFace.endPosition.z }, Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y,bottomLFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-
+	
 	Face nearFaceUp = { Vector3{ leftFace.startPosition.x, leftFace.startPosition.y, leftFace.startPosition.z }, Vector3{ rightFace.startPosition.x, rightFace.startPosition.y,rightFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
 	Face nearFaceDown = { Vector3{ bottomLFace.startPosition.x, bottomLFace.startPosition.y, bottomLFace.startPosition.z }, Vector3{ bottomFace.startPosition.x, bottomFace.startPosition.y,bottomFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
 	Face nearFaceRight = { Vector3{ rightFace.startPosition.x, rightFace.startPosition.y, rightFace.startPosition.z }, Vector3{ bottomFace.startPosition.x, bottomFace.startPosition.y,bottomFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
@@ -115,6 +115,9 @@ int main()
 			cubePosition.y++;
 		else if (IsKeyPressed(KEY_H))
 			cubePosition.y--;
+
+		if (IsKeyPressed(KEY_SPACE))
+			cubePosition = { 0.0f, 1.0f, 0.0f };
 
 		BeginDrawing();
 		ClearBackground(BLACK);
