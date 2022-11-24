@@ -5,6 +5,11 @@ using namespace std;
 
 bool checkFrustrumCulling();
 
+
+//Model model = LoadModel("../res/casa.obj");
+
+//Texture2D tex = LoadTexture("../res/casita.png");
+
 Camera3D camera;
 
 struct Face
@@ -19,8 +24,9 @@ struct Face
 };
 
 
-
 Vector3 cubePosition = { 0.0f, 1.0f, 0.0f };
+
+bool pause = false;
 
 int main()
 {
@@ -29,14 +35,12 @@ int main()
 
 	InitWindow(windowWidth, windowHeight, "Algebra EJ3");
 
-	SetTargetFPS(60);
-
-
+	//model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
 
 	camera.position = Vector3{ 4.0f, 2.0f, 4.0f };
-	camera.target = Vector3{ 0.0f, 1.8f, 0.0f };
+	camera.target = Vector3{ 0.0f, 1.0f, 0.0f };
 	camera.up = Vector3{ 0.0f, 1.0f, 0.0f };
-	camera.fovy = 60.0f;
+	camera.fovy = 90.0f;
 	camera.projection = CAMERA_PERSPECTIVE;
 
 	SetCameraMode(camera, CAMERA_FIRST_PERSON);
@@ -57,25 +61,13 @@ int main()
 
 	camera.position.y = distance * sinf(verticalAngle * PI / 180.0f);
 
-	//Vector3 selectedTarget = cubePosition;
+	Vector3 pos = { 0.0f,0.0f,0.0f };
+	Vector3 pos2 = { 200.0f,1.0f,0.0f };
+	//BoundingBox bounds = GetMeshBoundingBox(model.meshes[0]);
 
 
-	Face bottomFace = { Vector3{ camera.position.x + 1, camera.position.y - 13, camera.position.z  }, Vector3{ bottomFace.startPosition.x + 4, bottomFace.startPosition.y - 3, bottomFace.startPosition.z - 20   }, 4.0f, 1.0f, 32.0f, RED };
-	Face bottomLFace = { Vector3{ camera.position.x - 1, camera.position.y - 13, camera.position.z  },Vector3{ bottomLFace.startPosition.x - 4, bottomLFace.startPosition.y - 3, bottomLFace.startPosition.z - 20 }, 4.0f, 1.0f, 32.0f, RED };
-	Face rightFace = { Vector3{ camera.position.x + 1, camera.position.y - 11, camera.position.z  }, Vector3{ rightFace.startPosition.x + 4, rightFace.startPosition.y + 3, rightFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
-	Face leftFace = { Vector3{ camera.position.x - 1, camera.position.y - 11, camera.position.z }, Vector3{ leftFace.startPosition.x - 4, leftFace.startPosition.y + 3, leftFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
 
-	Face farFaceUp = { Vector3{ leftFace.endPosition.x, leftFace.endPosition.y, leftFace.endPosition.z }, Vector3{ rightFace.endPosition.x, rightFace.endPosition.y,rightFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-	Face farFaceDown = { Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y, bottomLFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-	Face farFaceRight = { Vector3{ rightFace.endPosition.x, rightFace.endPosition.y, rightFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-	Face farFaceLeft = { Vector3{ leftFace.endPosition.x, leftFace.endPosition.y, leftFace.endPosition.z }, Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y,bottomLFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
 	
-	Face nearFaceUp = { Vector3{ leftFace.startPosition.x, leftFace.startPosition.y, leftFace.startPosition.z }, Vector3{ rightFace.startPosition.x, rightFace.startPosition.y,rightFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-	Face nearFaceDown = { Vector3{ bottomLFace.startPosition.x, bottomLFace.startPosition.y, bottomLFace.startPosition.z }, Vector3{ bottomFace.startPosition.x, bottomFace.startPosition.y,bottomFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-	Face nearFaceRight = { Vector3{ rightFace.startPosition.x, rightFace.startPosition.y, rightFace.startPosition.z }, Vector3{ bottomFace.startPosition.x, bottomFace.startPosition.y,bottomFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-	Face nearFaceLeft = { Vector3{ leftFace.startPosition.x, leftFace.startPosition.y, leftFace.startPosition.z }, Vector3{ bottomLFace.startPosition.x, bottomLFace.startPosition.y,bottomLFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
-
-
 	while (!WindowShouldClose())
 	{
 		UpdateCamera(&camera);
@@ -87,7 +79,7 @@ int main()
 
 			camera.position.z = horizontalDistance * sinf(horizontalAngle * PI / 180.0f);
 
-			horizontalAngle -= 1.0f;
+			horizontalAngle -= 0.10f;
 
 		}
 		else if (IsKeyDown(KEY_A))
@@ -97,7 +89,7 @@ int main()
 
 			camera.position.z = horizontalDistance * sinf(horizontalAngle * PI / 180.0f);
 
-			horizontalAngle += 1.0f;
+			horizontalAngle += 0.10f;
 
 		}
 
@@ -119,15 +111,44 @@ int main()
 		if (IsKeyPressed(KEY_SPACE))
 			cubePosition = { 0.0f, 1.0f, 0.0f };
 
+		if (IsKeyPressed(KEY_R))
+			camera.fovy++;
+		else if (IsKeyPressed(KEY_F))
+			camera.fovy--;
+
+		if (IsKeyPressed(KEY_P))
+			pause = !pause;
+
+		
+
+
+		Face bottomFace = { Vector3{ camera.position.x + 1, camera.position.y -1, camera.position.z  }, Vector3{ bottomFace.startPosition.x + 4, bottomFace.startPosition.y - 3, bottomFace.startPosition.z - 20   }, 4.0f, 1.0f, 32.0f, RED };
+		Face bottomLFace = { Vector3{ camera.position.x - 1, camera.position.y - 1, camera.position.z  },Vector3{ bottomLFace.startPosition.x - 4, bottomLFace.startPosition.y - 3, bottomLFace.startPosition.z - 20 }, 4.0f, 1.0f, 32.0f, RED };
+		Face rightFace = { Vector3{ camera.position.x + 1, camera.position.y + 1, camera.position.z  }, Vector3{ rightFace.startPosition.x + 4, rightFace.startPosition.y + 3, rightFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
+		Face leftFace = { Vector3{ camera.position.x - 1, camera.position.y  + 1, camera.position.z }, Vector3{ leftFace.startPosition.x - 4, leftFace.startPosition.y + 3, leftFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
+
+		Face farFaceUp = { Vector3{ leftFace.endPosition.x, leftFace.endPosition.y, leftFace.endPosition.z }, Vector3{ rightFace.endPosition.x, rightFace.endPosition.y,rightFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+		Face farFaceDown = { Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y, bottomLFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+		Face farFaceRight = { Vector3{ rightFace.endPosition.x, rightFace.endPosition.y, rightFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+		Face farFaceLeft = { Vector3{ leftFace.endPosition.x, leftFace.endPosition.y, leftFace.endPosition.z }, Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y,bottomLFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+
+		Face nearFaceUp = { Vector3{ leftFace.startPosition.x, leftFace.startPosition.y, leftFace.startPosition.z }, Vector3{ rightFace.startPosition.x, rightFace.startPosition.y,rightFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+		Face nearFaceDown = { Vector3{ bottomLFace.startPosition.x, bottomLFace.startPosition.y, bottomLFace.startPosition.z }, Vector3{ bottomFace.startPosition.x, bottomFace.startPosition.y,bottomFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+		Face nearFaceRight = { Vector3{ rightFace.startPosition.x, rightFace.startPosition.y, rightFace.startPosition.z }, Vector3{ bottomFace.startPosition.x, bottomFace.startPosition.y,bottomFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+		Face nearFaceLeft = { Vector3{ leftFace.startPosition.x, leftFace.startPosition.y, leftFace.startPosition.z }, Vector3{ bottomLFace.startPosition.x, bottomLFace.startPosition.y,bottomLFace.startPosition.z }, 1.0f, 10.0f, 32.0f, RED };
+
+
+
+
 		BeginDrawing();
 		ClearBackground(BLACK);
 		BeginMode3D(camera);
 
-		if (cubePosition.z <= 3 )
+		if (cubePosition.z <= camera.position.z + 3 )
 		{
 
 			if (cubePosition.x - 1 <= rightFace.endPosition.x && cubePosition.x >= leftFace.endPosition.x &&
-				cubePosition.z + 2 >= farFaceDown.endPosition.z && cubePosition.z - 1 <= nearFaceDown.endPosition.z &&
+				cubePosition.z + 1>= farFaceDown.endPosition.z && cubePosition.z - 1 <= nearFaceDown.endPosition.z &&
 				cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y + 1 >= farFaceDown.endPosition.y)
 			{
 				DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
@@ -137,7 +158,7 @@ int main()
 		else
 		{
 			if (cubePosition.x - 3 <= rightFace.startPosition.x && cubePosition.x + 2>= leftFace.startPosition.x &&
-				cubePosition.z + 2 >= farFaceDown.endPosition.z && cubePosition.z - 1 <= nearFaceDown.endPosition.z &&
+				cubePosition.z + 2 >= farFaceDown.endPosition.z && cubePosition.z -2  <= nearFaceDown.endPosition.z &&
 				cubePosition.y - 1 <= nearFaceUp.endPosition.y && cubePosition.y + 2 >= nearFaceDown.endPosition.y)
 			{
 				DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
@@ -160,14 +181,27 @@ int main()
 		DrawLine3D(nearFaceDown.startPosition, nearFaceDown.endPosition, nearFaceDown.color);
 		DrawLine3D(nearFaceRight.startPosition, nearFaceRight.endPosition, nearFaceRight.color);
 		DrawLine3D(nearFaceLeft.startPosition, nearFaceLeft.endPosition, nearFaceLeft.color);
-
-
+		
+		//DrawModel(model, pos, 1.0f, WHITE);
+		//DrawBoundingBox(bounds, GREEN);
 
 		EndMode3D();
+
+		DrawText("'P' pause", 10, GetScreenHeight() - 20, 20, RED);
+
+		if (pause)
+		{
+			DrawRectangle(GetScreenWidth() / 2 - 125, GetScreenHeight() / 2 - 125, 250, 250, WHITE);
+			DrawText("Arrows to move the box", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 100, 20, BLACK);
+			DrawText("Y/H to move vertically", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 50 , 20, BLACK);
+			DrawText("WASD to move the cam", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 , 20, BLACK);
+			DrawText("R/F to change FOV", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 + 50, 20, BLACK);
+		}
 		EndDrawing();
 
 	}
 
+	//UnloadModel(model);
 	CloseWindow();
 
 	return 0;
@@ -176,9 +210,7 @@ int main()
 bool checkFrustrumCulling()
 {
 
-	/*if (cubePosition.x - 1 <= rightFace.endPosition.x)
-		return true;
-	else*/
+	
 	return false;
 
 
