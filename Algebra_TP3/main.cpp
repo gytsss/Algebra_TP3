@@ -72,6 +72,7 @@ int main()
 	{
 		UpdateCamera(&camera);
 
+
 		if (IsKeyDown(KEY_D))
 		{
 
@@ -144,22 +145,22 @@ int main()
 		ClearBackground(BLACK);
 		BeginMode3D(camera);
 
-		if (cubePosition.z <= camera.position.z + 3 )
+		if (cubePosition.z <= 8 )
 		{
 
-			if (cubePosition.x - 1 <= rightFace.endPosition.x && cubePosition.x >= leftFace.endPosition.x &&
+			if (cubePosition.x -1 <= rightFace.endPosition.x && cubePosition.x + 1 >= leftFace.endPosition.x &&
 				cubePosition.z + 1>= farFaceDown.endPosition.z && cubePosition.z - 1 <= nearFaceDown.endPosition.z &&
-				cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y + 1 >= farFaceDown.endPosition.y)
+				cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y  >= farFaceDown.endPosition.y)
 			{
 				DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
 				DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
 			}
 		}
-		else
+		else 
 		{
-			if (cubePosition.x - 3 <= rightFace.startPosition.x && cubePosition.x + 2>= leftFace.startPosition.x &&
-				cubePosition.z + 2 >= farFaceDown.endPosition.z && cubePosition.z -2  <= nearFaceDown.endPosition.z &&
-				cubePosition.y - 1 <= nearFaceUp.endPosition.y && cubePosition.y + 2 >= nearFaceDown.endPosition.y)
+			if (cubePosition.x - 2 <= rightFace.startPosition.x && cubePosition.x + 2 >= leftFace.startPosition.x &&
+				cubePosition.z +1 >= farFaceDown.endPosition.z && cubePosition.z -1  <= nearFaceDown.endPosition.z &&
+				cubePosition.y - 1 <= nearFaceUp.endPosition.y && cubePosition.y + 1 >= nearFaceDown.endPosition.y)
 			{
 				DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
 				DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
@@ -182,6 +183,7 @@ int main()
 		DrawLine3D(nearFaceRight.startPosition, nearFaceRight.endPosition, nearFaceRight.color);
 		DrawLine3D(nearFaceLeft.startPosition, nearFaceLeft.endPosition, nearFaceLeft.color);
 		
+
 		//DrawModel(model, pos, 1.0f, WHITE);
 		//DrawBoundingBox(bounds, GREEN);
 
