@@ -3,8 +3,9 @@
 
 using namespace std;
 
-bool checkFrustrumCulling();
-
+void input();
+void drawBox();
+void drawPause();
 
 //Model model = LoadModel("../res/casa.obj");
 
@@ -55,14 +56,14 @@ int main()
 
 	float horizontalDistance = distance * cosf(verticalAngle * PI / 180.0f); // Horizontal distance, the magnitude
 
-	camera.position.x = horizontalDistance * cosf(horizontalAngle * PI / 180.0f); // Calculate the position of camera.position x based on distance etc..
+	camera.position.x = horizontalDistance * cosf(horizontalAngle * PI / 180.0f); // Calculate the position of camera.position x based on distance 
 
 	camera.position.z = horizontalDistance * sinf(horizontalAngle * PI / 180.0f);
 
 	camera.position.y = distance * sinf(verticalAngle * PI / 180.0f);
 
-	Vector3 pos = { 0.0f,0.0f,0.0f };
-	Vector3 pos2 = { 200.0f,1.0f,0.0f };
+	//Vector3 pos = { 0.0f,0.0f,0.0f };
+	//Vector3 pos2 = { 200.0f,1.0f,0.0f };
 	//BoundingBox bounds = GetMeshBoundingBox(model.meshes[0]);
 
 
@@ -75,54 +76,28 @@ int main()
 
 		if (IsKeyDown(KEY_D))
 		{
+			horizontalAngle -= 0.10f;
 
 			camera.position.x = horizontalDistance * cosf(horizontalAngle * PI / 180.0f);
 
 			camera.position.z = horizontalDistance * sinf(horizontalAngle * PI / 180.0f);
 
-			horizontalAngle -= 0.10f;
 
 		}
 		else if (IsKeyDown(KEY_A))
 		{
+			horizontalAngle += 0.10f;
 
 			camera.position.x = horizontalDistance * cosf(horizontalAngle * PI / 180.0f);
 
 			camera.position.z = horizontalDistance * sinf(horizontalAngle * PI / 180.0f);
 
-			horizontalAngle += 0.10f;
 
 		}
 
-		if (IsKeyPressed(KEY_RIGHT))
-			cubePosition.x++;
-		else if (IsKeyPressed(KEY_LEFT))
-			cubePosition.x--;
+		input();
 
-		if (IsKeyPressed(KEY_UP))
-			cubePosition.z--;
-		else if (IsKeyPressed(KEY_DOWN))
-			cubePosition.z++;
-
-		if (IsKeyPressed(KEY_Y))
-			cubePosition.y++;
-		else if (IsKeyPressed(KEY_H))
-			cubePosition.y--;
-
-		if (IsKeyPressed(KEY_SPACE))
-			cubePosition = { 0.0f, 1.0f, 0.0f };
-
-		if (IsKeyPressed(KEY_R))
-			camera.fovy++;
-		else if (IsKeyPressed(KEY_F))
-			camera.fovy--;
-
-		if (IsKeyPressed(KEY_P))
-			pause = !pause;
-
-		
-
-
+		//Frustrum faces
 		Face bottomFace = { Vector3{ camera.position.x + 1, camera.position.y -1, camera.position.z  }, Vector3{ bottomFace.startPosition.x + 4, bottomFace.startPosition.y - 3, bottomFace.startPosition.z - 20   }, 4.0f, 1.0f, 32.0f, RED };
 		Face bottomLFace = { Vector3{ camera.position.x - 1, camera.position.y - 1, camera.position.z  },Vector3{ bottomLFace.startPosition.x - 4, bottomLFace.startPosition.y - 3, bottomLFace.startPosition.z - 20 }, 4.0f, 1.0f, 32.0f, RED };
 		Face rightFace = { Vector3{ camera.position.x + 1, camera.position.y + 1, camera.position.z  }, Vector3{ rightFace.startPosition.x + 4, rightFace.startPosition.y + 3, rightFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
@@ -152,8 +127,7 @@ int main()
 				cubePosition.z + 1>= farFaceDown.endPosition.z && cubePosition.z - 1 <= nearFaceDown.endPosition.z &&
 				cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y  >= farFaceDown.endPosition.y)
 			{
-				DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
-				DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+				drawBox();
 			}
 		}
 		else 
@@ -162,8 +136,7 @@ int main()
 				cubePosition.z +1 >= farFaceDown.endPosition.z && cubePosition.z -1  <= nearFaceDown.endPosition.z &&
 				cubePosition.y - 1 <= nearFaceUp.endPosition.y && cubePosition.y + 1 >= nearFaceDown.endPosition.y)
 			{
-				DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
-				DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+				drawBox();
 			}
 		}
 		DrawGrid(32, 1.0f);
@@ -193,11 +166,7 @@ int main()
 
 		if (pause)
 		{
-			DrawRectangle(GetScreenWidth() / 2 - 125, GetScreenHeight() / 2 - 125, 250, 250, WHITE);
-			DrawText("Arrows to move the box", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 100, 20, BLACK);
-			DrawText("Y/H to move vertically", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 50 , 20, BLACK);
-			DrawText("WASD to move the cam", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 , 20, BLACK);
-			DrawText("R/F to change FOV", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 + 50, 20, BLACK);
+			drawPause();
 		}
 		EndDrawing();
 
@@ -209,12 +178,46 @@ int main()
 	return 0;
 }
 
-bool checkFrustrumCulling()
+void input()
 {
+	if (IsKeyPressed(KEY_RIGHT))
+		cubePosition.x++;
+	else if (IsKeyPressed(KEY_LEFT))
+		cubePosition.x--;
 
-	
-	return false;
+	if (IsKeyPressed(KEY_UP))
+		cubePosition.z--;
+	else if (IsKeyPressed(KEY_DOWN))
+		cubePosition.z++;
 
+	if (IsKeyPressed(KEY_Y))
+		cubePosition.y++;
+	else if (IsKeyPressed(KEY_H))
+		cubePosition.y--;
 
+	if (IsKeyPressed(KEY_SPACE))
+		cubePosition = { 0.0f, 1.0f, 0.0f };
 
+	if (IsKeyPressed(KEY_R))
+		camera.fovy++;
+	else if (IsKeyPressed(KEY_F))
+		camera.fovy--;
+
+	if (IsKeyPressed(KEY_P))
+		pause = !pause;
+}
+
+void drawBox()
+{
+	DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
+	DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+}
+
+void drawPause()
+{
+	DrawRectangle(GetScreenWidth() / 2 - 125, GetScreenHeight() / 2 - 125, 250, 250, WHITE);
+	DrawText("Arrows to move the box", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 100, 20, BLACK);
+	DrawText("Y/H to move vertically", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 50, 20, BLACK);
+	DrawText("WASD to move the cam", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2, 20, BLACK);
+	DrawText("R/F to change FOV", GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 + 50, 20, BLACK);
 }
