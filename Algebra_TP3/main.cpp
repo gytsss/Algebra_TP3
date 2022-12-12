@@ -7,7 +7,7 @@ void input();
 void drawBox();
 void drawPause();
 
-//Model model = LoadModel("../res/casa.obj");
+//Model model = LoadModel("../res/FinalBaseMesh.obj");
 
 //Texture2D tex = LoadTexture("../res/casita.png");
 
@@ -63,12 +63,12 @@ int main()
 	camera.position.y = distance * sinf(verticalAngle * PI / 180.0f);
 
 	//Vector3 pos = { 0.0f,0.0f,0.0f };
-	//Vector3 pos2 = { 200.0f,1.0f,0.0f };
+	///Vector3 pos2 = { 200.0f,1.0f,0.0f };
 	//BoundingBox bounds = GetMeshBoundingBox(model.meshes[0]);
 
 
 
-	
+
 	while (!WindowShouldClose())
 	{
 		UpdateCamera(&camera);
@@ -98,10 +98,10 @@ int main()
 		input();
 
 		//Frustrum faces
-		Face bottomFace = { Vector3{ camera.position.x + 1, camera.position.y -1, camera.position.z  }, Vector3{ bottomFace.startPosition.x + 4, bottomFace.startPosition.y - 3, bottomFace.startPosition.z - 20   }, 4.0f, 1.0f, 32.0f, RED };
+		Face bottomFace = { Vector3{ camera.position.x + 1, camera.position.y - 1, camera.position.z  }, Vector3{ bottomFace.startPosition.x + 4, bottomFace.startPosition.y - 3, bottomFace.startPosition.z - 20   }, 4.0f, 1.0f, 32.0f, RED };
 		Face bottomLFace = { Vector3{ camera.position.x - 1, camera.position.y - 1, camera.position.z  },Vector3{ bottomLFace.startPosition.x - 4, bottomLFace.startPosition.y - 3, bottomLFace.startPosition.z - 20 }, 4.0f, 1.0f, 32.0f, RED };
 		Face rightFace = { Vector3{ camera.position.x + 1, camera.position.y + 1, camera.position.z  }, Vector3{ rightFace.startPosition.x + 4, rightFace.startPosition.y + 3, rightFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
-		Face leftFace = { Vector3{ camera.position.x - 1, camera.position.y  + 1, camera.position.z }, Vector3{ leftFace.startPosition.x - 4, leftFace.startPosition.y + 3, leftFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
+		Face leftFace = { Vector3{ camera.position.x - 1, camera.position.y + 1, camera.position.z }, Vector3{ leftFace.startPosition.x - 4, leftFace.startPosition.y + 3, leftFace.startPosition.z - 20 }, 1.0f, 10.0f, 32.0f, RED };
 
 		Face farFaceUp = { Vector3{ leftFace.endPosition.x, leftFace.endPosition.y, leftFace.endPosition.z }, Vector3{ rightFace.endPosition.x, rightFace.endPosition.y,rightFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
 		Face farFaceDown = { Vector3{ bottomLFace.endPosition.x, bottomLFace.endPosition.y, bottomLFace.endPosition.z }, Vector3{ bottomFace.endPosition.x, bottomFace.endPosition.y,bottomFace.endPosition.z }, 1.0f, 10.0f, 32.0f, RED };
@@ -120,25 +120,54 @@ int main()
 		ClearBackground(BLACK);
 		BeginMode3D(camera);
 
-		if (cubePosition.z <= 8 )
+		if (cubePosition.z <= 8)
 		{
+			if (cubePosition.y + 8.0f < farFaceUp.endPosition.y)
+			{
+				if (cubePosition.x - 7.50f <= rightFace.endPosition.x && cubePosition.x + 7.50f >= leftFace.endPosition.x &&
+					cubePosition.z + 5.50f >= farFaceDown.endPosition.z && cubePosition.z - 5.50f <= nearFaceDown.endPosition.z &&
+					cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y + 8.0f >= farFaceDown.endPosition.y)
+				{
+					drawBox();
+				}
+			}
+			else
+			{
+				if (cubePosition.x - 4.50f <= rightFace.endPosition.x && cubePosition.x + 4.50f >= leftFace.endPosition.x &&
+					cubePosition.z + 2.50f >= farFaceDown.endPosition.z && cubePosition.z - 2.50f <= nearFaceDown.endPosition.z &&
+					cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y + 8.0f >= farFaceDown.endPosition.y)
+				{
+					drawBox();
+				}
+			}
 
-			if (cubePosition.x -1 <= rightFace.endPosition.x && cubePosition.x + 1 >= leftFace.endPosition.x &&
-				cubePosition.z + 1>= farFaceDown.endPosition.z && cubePosition.z - 1 <= nearFaceDown.endPosition.z &&
-				cubePosition.y <= farFaceUp.endPosition.y && cubePosition.y  >= farFaceDown.endPosition.y)
-			{
-				drawBox();
-			}
 		}
-		else 
+		else
 		{
-			if (cubePosition.x - 2 <= rightFace.startPosition.x && cubePosition.x + 2 >= leftFace.startPosition.x &&
-				cubePosition.z +1 >= farFaceDown.endPosition.z && cubePosition.z -1  <= nearFaceDown.endPosition.z &&
-				cubePosition.y - 1 <= nearFaceUp.endPosition.y && cubePosition.y + 1 >= nearFaceDown.endPosition.y)
+			if (cubePosition.y + 8.0f < nearFaceUp.endPosition.y)
 			{
-				drawBox();
+
+				if (cubePosition.x - 7.50f <= rightFace.startPosition.x && cubePosition.x + 7.50f >= leftFace.startPosition.x &&
+					cubePosition.z + 5.50f >= farFaceDown.endPosition.z && cubePosition.z - 5.50f <= nearFaceDown.endPosition.z &&
+					cubePosition.y <= nearFaceUp.endPosition.y && cubePosition.y + 8.0f >= nearFaceDown.endPosition.y)
+				{
+					drawBox();
+				}
+			}
+			else
+			{
+				if (cubePosition.x - 4.50f <= rightFace.startPosition.x && cubePosition.x + 5.50f >= leftFace.startPosition.x &&
+					cubePosition.z + 2.50f >= farFaceDown.endPosition.z && cubePosition.z - 2.50f <= nearFaceDown.endPosition.z &&
+					cubePosition.y <= nearFaceUp.endPosition.y && cubePosition.y + 8.0f >= nearFaceDown.endPosition.y)
+				{
+					drawBox();
+				}
 			}
 		}
+
+
+
+
 		DrawGrid(32, 1.0f);
 
 		DrawLine3D(rightFace.startPosition, rightFace.endPosition, rightFace.color);
@@ -155,7 +184,9 @@ int main()
 		DrawLine3D(nearFaceDown.startPosition, nearFaceDown.endPosition, nearFaceDown.color);
 		DrawLine3D(nearFaceRight.startPosition, nearFaceRight.endPosition, nearFaceRight.color);
 		DrawLine3D(nearFaceLeft.startPosition, nearFaceLeft.endPosition, nearFaceLeft.color);
-		
+
+
+
 
 		//DrawModel(model, pos, 1.0f, WHITE);
 		//DrawBoundingBox(bounds, GREEN);
@@ -209,8 +240,14 @@ void input()
 
 void drawBox()
 {
-	DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
-	DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+	//DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, PURPLE);
+	//DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+	//DrawSphere(cubePosition, 1.0f, BROWN);
+	//DrawSphereWires(cubePosition, 1.0f, 5, 5, BLACK);
+
+	DrawCylinder(cubePosition, 5.0f, 3.0f, 8.0f, 50, RED);
+	DrawCylinderWires(cubePosition, 5.0f, 3.0f, 8.0f, 50, VIOLET);
+
 }
 
 void drawPause()
